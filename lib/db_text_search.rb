@@ -22,7 +22,7 @@ module DbTextSearch
   # @api private
   def self.match_adapter(connection, mysql:, postgres:, sqlite:)
     case connection.adapter_name
-      when /mysql/i
+      when /(mysql|trilogy)/i
         mysql.call
       when /postg/i # match all postgres and postgis adapters
         postgres.call
