@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'activerecord', '>= 5.2.0'
 
   s.add_development_dependency 'mysql2', '>= 0.3.20'
+  s.add_development_dependency 'trilogy'
   s.add_development_dependency 'pg', '>= 0.18.4'
   s.add_development_dependency 'sqlite3', '>= 1.3.11'
 

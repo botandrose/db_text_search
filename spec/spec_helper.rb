@@ -16,11 +16,9 @@ ActiveRecord::Base.logger = Logger.new('log/test-queries.log')
 
 ENV['DB'] ||= 'sqlite3'
 case ENV['DB']
-  when 'mysql2', 'postgresql'
+  when 'mysql2', 'trilogy', 'postgresql'
     system({'DB' => ENV['DB']}, 'script/create-db-users') unless ENV['TRAVIS']
     config = {
-        # Host 127.0.0.1 required for default postgres installation on Ubuntu.
-        host:         '127.0.0.1',
         database:     'db_text_search_gem_test',
         encoding:     'utf8',
         min_messages: 'WARNING',
@@ -29,12 +27,16 @@ case ENV['DB']
         password:     ENV['DB_PASSWORD'] || 'db_text_search'
     }
     if ENV['DB'] == 'postgresql'
+      # Host 127.0.0.1 required for default postgres installation on Ubuntu.
+      config[:host] = '127.0.0.1'
       begin
         # Must be required before establish_connection.
         require 'schema_plus_pg_indexes'
       rescue LoadError
         # Nothing to do here, optional dependency
       end
+    else
+      config[:socket] = "/var/run/mysqld/mysqld.sock"
     end
     ActiveRecord::Tasks::DatabaseTasks.create(config.stringify_keys)
     ActiveRecord::Base.establish_connection(config)
